@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title> Alpine Title </title>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script src="alpineCore.js"></script>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div x-data="{ count: 0, message: 'alpine data' }">
+            <h1 x-data x-text="$store.currentUser.name"></h1>
+            <button @click.stop="count++">Increment</button>
+            <button @click.stop="count--">Decrement</button>
+            <button @click.stop="count = 0">Resetement</button>
+            <span x-bind:class="count % 5 == 0 && count != 0 ? 'numberisfive' : ''" x-text="count"></span>
+        </div>
+
+        <div class="mt-10" x-data="dropdown">
+            <button @click="toggle">Toggle</button>
+            <div x-show="open" x-cloak>Contents</div>
+        </div>
+
+        <div class="mt-10" x-data="{
+                search: '',
+                items: ['foo', 'bar', 'baz'],
+
+                get filteredItems() {
+                    return this.items.filter(
+                        i => i.startsWith(this.search)
+                    )
+                }
+            }">
+        <input x-model="search" placeholder="Search...">
+        <ul>
+            <template x-for="item in filteredItems" :key="item">
+                <li x-text="item"></li>
+            </template>
+        </ul>
+        </div>
+
+        <!-- My way: Displays color on button press, changing to the next color each time -->
+        <div class="mt-64" x-data="colors">
+            <div id="squareBox" x-bind:style="{
+                'background-color':colors[i % colorsLength],
+                 width: '40px',
+                 height: '40px'
+               }"></div>
+            <p x-text="i"></p>
+            <p x-text="i%colorsLength"></p>
+            <button class="mt-10" @click.stop="i++"> Change color</button>
+        </div>
+
+         <!-- Challenge way - Displays all at once -->
+        <div class="mt-64" x-data="colors">
+            <template x-for="color in colors">
+                <div 
+                 style="
+                  width: 40px;
+                  height: 40px;
+                  display: inline-block"
+                 :style="{
+                    backgroundColor: color
+                }"></div>
+            </template>
+        </div>
+
+
+        
+        <div class="mt-64 grid--3">
+
+            <!-- My Version of the challenge -->
+            <div class="grid--row-2 width-25"  x-data="{inputText: '', buttonText: null}">
+            <input class="mb-10" type="text" x-model="inputText" placeholder="Type button name ">
+            <button @click="buttonText = inputText" x-text="buttonText"></button>
+            </div>
+
+            <div class="grid--row-2 width-25" x-data="{inputText: '', bgColor: null}">
+                <input class="mb-10" type="text" x-model="inputText" placeholder="Type button color ">
+                <button @click="bgColor = inputText" :style="{backgroundColor: bgColor}" @click="">Set</button>
+            </div>
+
+            <div class="grid--row-2 width-25" x-data="{inputText: '', buttonId: null}">
+                <input class="mb-10" type="text" x-model="inputText" placeholder="Type button name ">
+                <button @click="buttonId = inputText" :id="buttonId">Set</button>
+            </div>
+
+            <!-- Challenge Way -->
+            <div class="mt--32 width-25 grid--row-4 row-gap--10" x-data="{text: null, bg: null, id: null}">
+                <button :id="id" :style="{backgroundColor: bg}" x-text="text"></button>
+                <input type="text" x-model="text" placeholder="Text">
+                <input type="text" x-model="bg" placeholder="Background Color">
+                <input type="text" x-model="id" placeholder="ID">
+            </div>
+        </div>
+
+        
+
+    </body>
+</html>
