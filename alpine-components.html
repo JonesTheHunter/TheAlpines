@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Components</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -11,9 +10,9 @@
         <script src="alpineCore.js"></script>
         <link rel="stylesheet" href="main.css">
     </head>
-    <body class="bg-gray-200 p-8">
-     <!--  
-        Dropdown Component
+    <body class="bg-gray-100 p-8">
+     <!--Dropdown Component-->
+     <section>
         <div x-data="{open: false}">
             <button 
             @click="open = !open"
@@ -36,13 +35,18 @@
             </li>
         </ul>
         </div>
-    -->
+    </section>
 
-    <!--Modal-->
-    <div x-data="{open: false}">
+    <hr>
+
+    <!-- Modal-->
+    <section>
+    <div x-data="{
+        open: false
+    }">
         <button @click="open = true" class="inline-flex items-center py-2 px-6 bg-purple-600 hover:bg-opacity-95 text-white rounded-md shadow"> Toggle Modal</button>
         <template x-teleport="body" >
-                    <!--Backdrop-->
+                    Backdrop
         <div 
         x-show="open"
         x-transition:enter="transition ease-out duration-300"
@@ -51,15 +55,13 @@
         x-transition:leave="transition ease-in duration-300"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="modal__backdrop fixed flex justify-center bg-black/50 items-center fixed left-0 top-0 bottom-0 right-0"
+        class=" fixed flex justify-center bg-black/50 items-center fixed left-0 top-0 bottom-0 right-0"
         >
-            <!--Dialogue-->
             <div 
             @click.outside = "open = false" 
             x-show="open" 
             class="w-1/2 bg-white rounded-xl"
             >
-                <!--Modal Title-->
                 <div class="py-2 px-4 text-lg font-semibold bg-gray-100 rounded-t-lg flex items-center justify-between">
                     <h2>Modal Title</h2>
                     <button @click="open = false">
@@ -68,11 +70,9 @@
                       </svg>
                       </button>
                 </div>
-                <!--Modal Body-->
                 <div class="p-4">
                     Modal Content
                 </div>
-                <!--Footer-->
                 <div class="py-3 px-4 text-lg font-semibold bg-gray-100 rounded-b-lg">
                     <button class="inline-flex items-center py-1 px-3 bg-emerald-600 hover:bg-opacity-95 text-white rounded-md shadow"> Accept</button>
                     <button @click="open = false" class="inline-flex items-center py-1 px-3 bg-gray-300 hover:bg-opacity-95 text-gray-800 rounded-md shadow"> Toggle Modal</button>
@@ -81,5 +81,245 @@
         </div>
         </template>
     </div>
+    </section>
+
+    <hr>
+
+    <!--Tabs-->
+    <section>
+    <div x-data="{ 
+        tabs :  [
+            {name: 'Home', content: 'The Home Content'},
+            {name: 'Users', content: 'The Users Content'},
+            {name: 'Settings', content: 'The Settings Content'}
+        ],
+        activeTab: 'Home'
+    }">
+        <div class="flex">
+            <template x-for="tab in tabs" :key="tab.name">
+                <a 
+                @click="activeTab = tab.name" 
+                x-text="tab.name"
+                class="py-2 px-3 bg-white cursor-pointer border" 
+                :class="{'bg-zinc-100': activeTab === tab.name, 'text-blue-500': activeTab === tab.name, 'border-blue-500': activeTab === tab.name}">
+                </a>
+            </template>
+        </div>
+        <div class="py-2 px-3 bg-white border">
+            <template x-for="tab in tabs" :key="tab.name">
+                <div x-show="activeTab === tab.name" x-transition>
+                    <span x-text="tab.content"></span>
+                </div>
+            </template>
+        </div>
+    </div>
+    </section>
+    
+    <hr>
+
+    <!--Carousel - NOTE - Animations are really buggy with this setup, removed the animation-->
+    <section>
+    <div x-data="{
+        images: [ 'img/1.jpg', 'img/2.jpg', 'img/3.jpg', 'img/4.jpg'],
+        activeImage: null,
+        init() {
+            this.activeImage = this.images.length > 0 ? this.images[0] : null
+        },
+        prev() {
+            const index = this.images.indexOf(this.activeImage);
+            this.activeImage = index === 0 ? this.activeImage = this.images[this.images.length - 1] : this.images[index - 1];
+        },
+        next(){
+            const index = this.images.indexOf(this.activeImage);
+            this.activeImage = index === this.images.length - 1 ? this.activeImage = this.images[0] : this.images[index + 1];
+        }
+    }">
+        <div class="relative bg-zinc-200">
+            <template x-for="image in images">
+                <img 
+                x-show="activeImage === image"
+                :src="image" 
+                alt="" />
+            </template>
+                <a @click.prevent="prev" class="cursor-pointer absolute left-0 top-1/2 translate-y-1/2 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                </a>
+                <a @click.prevent="next" class="cursor-pointer absolute right-0 top-1/2 translate-y-1/2 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg> 
+                </a>
+        </div>
+        <div class="flex">
+            <template x-for="image in images">
+                <a
+                @click="activeImage = image" 
+                class="cursor-pointer w-[40px] object-cover w-[90px] border hover:border-blue-500 flex items-center justify-center"
+                :class="{'border-blue-500': activeImage === image}"
+                >
+                    <img :src="image" alt="" class="object-cover"/>
+                </a>
+            </template>
+        </div>
+    </div>
+    </section>
+
+    <hr>
+
+    <!--Accordion-->
+    <section>
+    <div x-data="{
+        items: [
+        {title: 'Item-1', body: 'Body 1'},
+        {title: 'Item-2', body: 'Body 2'},
+        {title: 'Item-3', body: 'Body 3'},
+        {title: 'Item-4', body: 'Body 4'}
+        ],
+        activeItem: null,
+
+        selectItem(item){
+            this.activeItem = this.activeItem === item ? null : item;
+        }
+    }">
+    <template x-for="item in items">
+        <div>
+            <div 
+            @click="selectItem(item)" 
+            class="py-1 px-2 bg-gray-200 border cursor-pointer hover:text-blue-400 font-semibold transition-all flex justify-between"
+            >
+            <span class="select-none" x-text="item.title"></span>
+            <svg 
+            class="w-6 h-6 ml-2 transition-all" 
+            :class="{'-rotate-90': activeItem === item}" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            class="w-6 h-6">
+                <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg> 
+            </div>
+
+            <div
+            x-show="activeItem === item" 
+            x-transition
+            x-html="item.body" 
+            class="p-2 bg-white"
+            >
+            </div>
+        </div>
+    </template>
+    </div>
+    </section>
+
+    <hr>
+
+    <!--Notification-->
+    <section x-data="{
+        visible: true
+    }">
+    <div 
+    x-data="{
+        timeout: 5000,
+        percent: 0,
+        interval: null,
+        close() {
+            this.visible = false;
+            clearInterval(this.interval)
+        },
+        init() {
+            setTimeout(() => {
+                this.visible = false;
+            }, this.timeout)
+
+            const startDate = Date.now();
+            const futureDate = Date.now() + this.timeout;
+
+            this.interval = setInterval(() => {
+                const date = Date.now();
+                this.percent = (date - startDate) * 100 / (futureDate - startDate);
+                if (this.percent >= 100) {
+                    clearInterval(this.interval)
+                }
+            })
+        },
+    }"
+    x-init="init()"
+    x-show="visible"
+    class="relative py-2 px-4 bg-green-400 text-white"
+    >
+    <div class="font-semibold mb-2 py-2">NEW Notification</div>
+    <div class="pb-4 text-sm">Look. That's more pollen than you and I will see in a lifetime. It's just a status symbol. Bees make too much of it. Perhaps. Unless you're wearing it and the ladies see you wearing it. Those ladies? Aren't they our cousins too? Distant. Distant. Look at these two. - Oouple of Hive Harrys. - Let's have fun with them. It must be dangerous being a Pollen Jock.</div>
+    <button
+    @click="close" 
+    class= "absolute flex items-center justify-center right-2 top-2 w-[30px] h-[30px] rounded-full hover:bg-black/10 transition-colors"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>          
+    </button>
+    <div>
+        <div 
+        class="absolute left-0 bottom-0 right-0 h-[6px] bg-black/10 "
+        :style="{'width': `${percent}%`}"
+        ></div>
+    </div>
+    </div>
+
+    <div x-show="!visible">
+        <h2 class="text-xl font-semibold">Oops... it appears the notification went away...</h2>
+        <p
+        @click="window.location.reload()"
+        class="cursor-pointer"
+        >
+        Click here to refresh and see the animation over again
+        </p>
+    </div>
+    </section>
+
+    <hr>
+
+    <!--Popover-->
+    <section>
+    <div x-data="{
+        show: false,
+        title: 'Test Popover',
+        message: 'This is a test <b>popover</b> message',
+
+        showPopOver(){
+            this.show = !this.show;
+        }
+    }"
+    class="relative mt-64 flex justify-center"
+    >
+    <button
+    x-ref="button" 
+    @click="showPopOver()" 
+    class="inline-flex items-center py-2 px-6 bg-purple-600 hover:bg-opacity-95 text-white rounded-md shadow"
+    >
+    Popover
+    </button>
+
+    <div x-ref="popover" x-show="show" x-transition class="absolute bottom-[100%] mb-6 shadow-lg bg-white w-[200px] rounded">
+        <div class="flex justify-between items-center py-1 font-semibold px-2">
+            <span x-text="title"></span>
+            <button 
+            @click="show = false"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>          
+            </button>
+        </div>
+
+        <div x-html="message" class="p-3 text-sm"></div>
+    </div>
+    </div>
+    </section>
+
+
     </body>
 </html>

@@ -1,7 +1,19 @@
 :root{
     max-width: 1360px;
     margin: 0px auto;
+    --hr-color: #202020
 }
+
+section{
+    margin: 128px 0px;
+}
+
+hr{
+    border-color: var(--hr-color);
+    background-color: var(--hr-color);
+    color: var(--hr-color);
+}
+
 .mt-10{
     margin-top: 10px;
 }
